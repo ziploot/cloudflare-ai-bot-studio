@@ -158,6 +158,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       height: 120px;
       overflow-y: auto;
       margin-top: 12px;
+      white-space: pre-wrap;
     }
   </style>
 </head>
@@ -241,7 +242,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     async function deployWrangler() {
       const log = document.getElementById('wranglerLog');
-      log.innerText = "[WRANGLER]: Initiating Cloudflare automated Wrangler deployment...";
+      log.innerText = "[WRANGLER]: Initiating Cloudflare automated Wrangler deployment...\n(If authenticating for the first time, a browser window will open to log into Cloudflare)";
       try {
         const res = await fetch('/api/deploy-wrangler', { method: 'POST' });
         const data = await res.json();
@@ -273,9 +274,16 @@ def chat():
 @app.route('/api/deploy-wrangler', methods=['POST'])
 def deploy_wrangler():
     try:
-        # Check if wrangler CLI is installed via npx
+        # Use explicit encoding='utf-8' and errors='replace' to prevent Windows UnicodeDecodeError
         cmd = "cmd.exe /c npx -y wrangler deploy worker.js --name cloudflare-ai-bot-studio"
-        res = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(__file__))
+        res = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            errors='replace',
+            cwd=os.path.dirname(__file__)
+        )
         output = res.stdout or res.stderr
         if res.returncode == 0:
             return jsonify({"status": "success", "output": f"[WRANGLER SUCCESS]:\n{output}"})
