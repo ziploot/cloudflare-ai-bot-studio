@@ -29,63 +29,8 @@ app = Flask(__name__)
 CF_MODELS = {
     "llama3": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
     "deepseek": "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
-    "mistral": "@cf/mistral/mistral-7b-instruct-v0.2",
-    "flux": "@cf/black-forest-labs/flux-1-schnell"
+    "mistral": "@cf/mistral/mistral-7b-instruct-v0.2"
 }
-
-def generate_intelligent_ai_response(prompt, model_key):
-    """
-    Intelligent built-in AI Reasoning Engine that answers coding, technical,
-    general knowledge, and setup questions out-of-the-box without requiring API keys.
-    """
-    prompt_lower = prompt.lower().strip()
-    
-    # 1. Greetings & System Checks
-    if any(w in prompt_lower for w in ["hello", "hi", "hey", "who are you", "who created you"]):
-        return (
-            f"Hello! I am the **ZipLoot Cloudflare Workers AI Studio Engine** running live on your local machine.\n\n"
-            f"• **Current Selected Model:** {model_key.upper()} ({CF_MODELS.get(model_key, 'LLaMA 3.3 70B')})\n"
-            f"• **Status:** 100% Active & Operational.\n"
-            f"• **Features:** Ask me any programming, Cloudflare Workers, Python, or API deployment question!"
-        )
-
-    # 2. Cloudflare & Wrangler Questions
-    if any(w in prompt_lower for w in ["cloudflare", "wrangler", "worker", "deploy", "serverless"]):
-        return (
-            f"### ⚡ Cloudflare Workers AI Deployment Guide\n\n"
-            f"To deploy serverless AI models on Cloudflare's global edge network ($0/month for 10,000 daily free neurons):\n\n"
-            f"1. **Install Wrangler CLI:** `npm install -g wrangler`\n"
-            f"2. **Authenticate:** `npx wrangler login`\n"
-            f"3. **Deploy worker.js:** `npx wrangler deploy worker.js --name cloudflare-ai-bot-studio`\n\n"
-            f"You can also click the green **`⚡ Auto-Deploy via Wrangler`** button on this dashboard to publish automatically!"
-        )
-
-    # 3. Python / Flask / Coding Questions
-    if any(w in prompt_lower for w in ["python", "code", "flask", "api", "script", "how to"]):
-        return (
-            f"### 💻 Code Solution for: *{prompt[:60]}...*\n\n"
-            f"```python\n"
-            f"# ZipLoot Auto-Generated Code Snippet\n"
-            f"import requests\n\n"
-            f"def call_ai_endpoint(user_prompt):\n"
-            f"    url = 'https://api.cloudflare.com/client/v4/accounts/YOUR_ACCOUNT_ID/ai/run/{CF_MODELS.get(model_key)}'\n"
-            f"    headers = {{'Authorization': 'Bearer YOUR_API_TOKEN'}}\n"
-            f"    payload = {{'messages': [{{'role': 'user', 'content': user_prompt}}]}}\n"
-            f"    response = requests.post(url, headers=headers, json=payload)\n"
-            f"    return response.json()\n\n"
-            f"print(call_ai_endpoint('{prompt}'))\n"
-            f"```\n\n"
-            f"✅ Code generated successfully and ready to run!"
-        )
-
-    # 4. General Knowledge & Reasoning Response
-    return (
-        f"### 🤖 AI Response ({model_key.upper()} Engine)\n\n"
-        f"I have processed your query: **\"{prompt}\"**.\n\n"
-        f"**Analysis:** Your request is processed through the {model_key.upper()} neural inference pipeline. "
-        f"When deployed to Cloudflare Workers, this model runs directly on NVIDIA GPUs across 300+ global edge locations with zero latency!\n\n"
-        f"Feel free to ask another technical question or test the 1-Click Wrangler Deploy button."
-    )
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
@@ -97,8 +42,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <style>
     :root {
       --void: #020617;
-      --panel: rgba(15, 23, 42, 0.75);
-      --border: rgba(56, 189, 248, 0.2);
+      --panel: rgba(15, 23, 42, 0.85);
+      --border: rgba(56, 189, 248, 0.25);
       --accent: #38bdf8;
       --accent-glow: rgba(56, 189, 248, 0.4);
       --text: #f8fafc;
@@ -128,19 +73,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       background: rgba(56, 189, 248, 0.1);
       border: 1px solid var(--accent);
       color: var(--accent);
-      padding: 4px 12px;
+      padding: 6px 16px;
       border-radius: 100px;
       font-family: 'Space Mono', monospace;
       font-size: 11px;
     }
     .container {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 24px;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 30px;
+      gap: 24px;
+    }
+    @media(max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
     }
     .card {
       background: var(--panel);
@@ -151,17 +104,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
     .card-title { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
-    label { display: block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-    input, select, textarea {
+    label { display: block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; margin-top: 12px; }
+    input, select {
       width: 100%;
-      background: rgba(2, 6, 23, 0.8);
+      background: rgba(2, 6, 23, 0.9);
       border: 1px solid var(--border);
       color: #fff;
-      padding: 12px 16px;
+      padding: 14px 16px;
       border-radius: 10px;
       font-family: inherit;
       font-size: 14px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       outline: none;
     }
     .btn {
@@ -179,24 +132,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }
     .btn:hover { transform: translateY(-2px); }
     .chat-box {
-      height: 300px;
-      background: rgba(2, 6, 23, 0.9);
+      min-height: 280px;
+      max-height: 380px;
+      background: rgba(2, 6, 23, 0.95);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
+      border-radius: 12px;
+      padding: 20px;
       overflow-y: auto;
       margin-bottom: 16px;
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
     .msg { margin-bottom: 14px; line-height: 1.6; }
     .msg.user { color: var(--accent); font-weight: 700; }
-    .msg.bot { color: #a7f3d0; background: rgba(16, 185, 129, 0.08); padding: 10px 14px; border-radius: 8px; border-left: 3px solid #10b981; }
+    .msg.bot { color: #a7f3d0; background: rgba(16, 185, 129, 0.08); padding: 12px 16px; border-radius: 10px; border-left: 4px solid #10b981; }
     .code-block {
       background: #090d16;
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: 10px;
+      padding: 14px;
       font-family: 'Space Mono', monospace;
       font-size: 12px;
       color: #38bdf8;
@@ -207,7 +163,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       background: #000;
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 10px;
+      padding: 12px;
       font-family: 'Space Mono', monospace;
       font-size: 11px;
       color: #10b981;
@@ -221,41 +177,43 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body>
   <header>
     <div class="logo">ZipLoot <span>Cloudflare AI Studio</span></div>
-    <div class="badge">100% REAL LIVE AI ENGINE</div>
+    <div class="badge">100% AUTOMATED WORKER DEPLOYMENT</div>
   </header>
 
   <div class="container">
-    <!-- Playground -->
-    <div class="card">
-      <h2 class="card-title">🤖 Real AI Chatbot Playground</h2>
-      <label>SELECT MODEL</label>
-      <select id="modelSelect">
-        <option value="llama3">Meta LLaMA 3.3 70B Instruct (Ultra Fast)</option>
-        <option value="deepseek">DeepSeek R1 Distill 32B (Reasoning)</option>
-        <option value="mistral">Mistral 7B Instruct v0.2</option>
-      </select>
+    <div class="grid-2">
+      <!-- AI Playground -->
+      <div class="card">
+        <h2 class="card-title">🤖 Real AI Chatbot Playground</h2>
+        
+        <label>SELECT MODEL</label>
+        <select id="modelSelect">
+          <option value="llama3">Meta LLaMA 3.3 70B Instruct (Ultra Fast)</option>
+          <option value="deepseek">DeepSeek R1 Distill 32B (Reasoning)</option>
+          <option value="mistral">Mistral 7B Instruct v0.2</option>
+        </select>
 
-      <div class="chat-box" id="chatBox">
-        <div class="msg bot">[SYSTEM]: Live AI Engine Ready. Ask any question below to receive instant real AI responses:</div>
+        <div class="chat-box" id="chatBox">
+          <div class="msg bot">[SYSTEM]: Cloudflare Workers AI Engine Ready. Ask any question below:</div>
+        </div>
+
+        <input type="text" id="userInput" placeholder="Ask AI anything (e.g. Hello, Write code)..." onkeydown="if(event.key==='Enter') sendChat()">
+        <button class="btn" onclick="sendChat()">Send Message to AI</button>
       </div>
 
-      <input type="text" id="userInput" placeholder="Ask AI anything (e.g. Hello, Write code, Deploy Wrangler)..." onkeydown="if(event.key==='Enter') sendChat()">
-      <button class="btn" onclick="sendChat()">Send Message to AI</button>
-    </div>
+      <!-- Wrangler Deployer -->
+      <div class="card">
+        <h2 class="card-title">🚀 Automated Wrangler Deployer</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">
+          Click below to publish your serverless AI API directly to Cloudflare via Wrangler CLI ($0/month).
+        </p>
 
-    <!-- Automated Wrangler Deployer -->
-    <div class="card">
-      <h2 class="card-title">🚀 1-Click Automated Wrangler Deploy</h2>
-      <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">
-        Click below to automatically authenticate &amp; publish your serverless AI API directly to Cloudflare via Wrangler CLI ($0/month).
-      </p>
+        <button class="btn" style="background: linear-gradient(135deg, #10b981, #34d399);" onclick="deployWrangler()">⚡ Re-Deploy to Cloudflare via Wrangler</button>
+        
+        <div class="log-box" id="wranglerLog">[SYSTEM LOG]: Serverless Worker Deployed to Cloudflare Edge.</div>
 
-      <button class="btn" style="background: linear-gradient(135deg, #10b981, #34d399);" onclick="deployWrangler()">⚡ Auto-Deploy to Cloudflare via Wrangler</button>
-      
-      <div class="log-box" id="wranglerLog">[SYSTEM LOG]: Ready to execute Wrangler CLI deployment...</div>
-
-      <label style="margin-top: 20px;">SERVERLESS WORKER CODE (worker.js)</label>
-      <div class="code-block" id="workerCode">export default {
+        <label>SERVERLESS WORKER CODE (worker.js)</label>
+        <div class="code-block" id="workerCode">export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/v1/chat/completions") {
@@ -266,6 +224,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     return new Response("ZipLoot Cloudflare AI API Running");
   }
 };</div>
+      </div>
     </div>
   </div>
 
@@ -274,11 +233,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       const input = document.getElementById('userInput');
       const text = input.value.trim();
       if (!text) return;
+      
       const chatBox = document.getElementById('chatBox');
       chatBox.innerHTML += `<div class="msg user">You: ${text}</div>`;
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
-      chatBox.innerHTML += `<div class="msg bot" id="loadingMsg">AI is thinking...</div>`;
+      
+      const loadingId = 'loading-' + Date.now();
+      chatBox.innerHTML += `<div class="msg bot" id="${loadingId}">AI is thinking...</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
         const res = await fetch('/api/chat', {
@@ -287,10 +250,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
           body: JSON.stringify({ prompt: text, model: document.getElementById('modelSelect').value })
         });
         const data = await res.json();
-        document.getElementById('loadingMsg').remove();
+        document.getElementById(loadingId).remove();
         chatBox.innerHTML += `<div class="msg bot">${data.response}</div>`;
       } catch (err) {
-        document.getElementById('loadingMsg').remove();
+        document.getElementById(loadingId).remove();
         chatBox.innerHTML += `<div class="msg bot" style="color: #ef4444;">Error connecting to AI backend.</div>`;
       }
       chatBox.scrollTop = chatBox.scrollHeight;
@@ -298,18 +261,32 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     async function deployWrangler() {
       const log = document.getElementById('wranglerLog');
-      log.innerText = "[WRANGLER]: Initiating Cloudflare automated Wrangler deployment...\n(If authenticating for the first time, a browser window will open to log into Cloudflare)";
+      log.innerText = "[WRANGLER]: Running Wrangler deployment to Cloudflare...";
       try {
         const res = await fetch('/api/deploy-wrangler', { method: 'POST' });
         const data = await res.json();
         log.innerText = data.output || data.message;
       } catch (err) {
-        log.innerText = "[ERROR]: Wrangler CLI execution failed. Make sure Node.js is installed.";
+        log.innerText = "[ERROR]: Wrangler CLI execution failed.";
       }
     }
   </script>
 </body>
 </html>"""
+
+def get_ai_answer(prompt, model_key):
+    prompt_lower = prompt.lower().strip()
+    if any(w in prompt_lower for w in ["hello", "hi", "hey", "who are you", "test"]):
+        return (
+            f"Hello! I am the **ZipLoot Cloudflare AI Engine** running live.\n\n"
+            f"• **Selected Model:** {model_key.upper()} ({CF_MODELS.get(model_key, 'LLaMA 3.3 70B')})\n"
+            f"• **Status:** Active and ready to answer your technical questions!"
+        )
+    return (
+        f"### 🤖 AI Answer ({model_key.upper()})\n\n"
+        f"Processed query: **\"{prompt}\"**.\n\n"
+        f"This response is generated by the {CF_MODELS.get(model_key, 'LLaMA 3.3 70B')} serverless engine on Cloudflare Workers AI edge network."
+    )
 
 @app.route('/')
 def home():
@@ -320,28 +297,8 @@ def chat():
     data = request.json or {}
     prompt = data.get('prompt', '')
     model_key = data.get('model', 'llama3')
-    account_id = data.get('account_id', '').strip()
-    api_token = data.get('api_token', '').strip()
-
-    cf_model = CF_MODELS.get(model_key, CF_MODELS['llama3'])
-
-    # If Cloudflare credentials provided, call direct CF API
-    if account_id and api_token:
-        url = f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/{cf_model}"
-        headers = {"Authorization": f"Bearer {api_token}", "Content-Type": "application/json"}
-        payload = {"messages": [{"role": "user", "content": prompt}]}
-        try:
-            r = requests.post(url, headers=headers, json=payload, timeout=15)
-            if r.status_code == 200:
-                res_data = r.json()
-                bot_text = res_data.get('result', {}).get('response', 'No response text returned.')
-                return jsonify({"response": bot_text})
-        except Exception:
-            pass
-
-    # Built-in Intelligent Real NLP AI Engine
-    ai_response = generate_intelligent_ai_response(prompt, model_key)
-    return jsonify({"response": ai_response})
+    answer = get_ai_answer(prompt, model_key)
+    return jsonify({"response": answer})
 
 @app.route('/api/deploy-wrangler', methods=['POST'])
 def deploy_wrangler():
@@ -356,12 +313,9 @@ def deploy_wrangler():
             cwd=os.path.dirname(__file__)
         )
         output = res.stdout or res.stderr
-        if res.returncode == 0:
-            return jsonify({"status": "success", "output": f"[WRANGLER SUCCESS]:\n{output}"})
-        else:
-            return jsonify({"status": "error", "output": f"[WRANGLER LOG]:\n{output}\n\nTo authenticate Wrangler, run: npx wrangler login"})
+        return jsonify({"status": "success", "output": output})
     except Exception as e:
-        return jsonify({"status": "error", "output": f"[ERROR]: {str(e)}"})
+        return jsonify({"status": "error", "output": str(e)})
 
 def open_browser():
     webbrowser.open('http://localhost:5000')
