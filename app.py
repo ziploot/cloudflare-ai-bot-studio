@@ -44,15 +44,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <style>
     :root {
       --void: #020617;
-      --panel: rgba(8, 14, 42, 0.88);
+      --panel: rgba(15, 23, 42, 0.9);
       --border: rgba(56, 189, 248, 0.25);
       --accent: #38bdf8;
       --accent-glow: rgba(56, 189, 248, 0.4);
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
       background: var(--void);
       color: var(--text);
       font-family: 'Inter', sans-serif;
@@ -62,41 +65,44 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       background-image: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.12) 0%, transparent 75%);
     }
     header {
-      padding: 20px 40px;
+      padding: 18px 32px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       backdrop-filter: blur(12px);
+      width: 100%;
     }
-    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px; color: #fff; }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; color: #fff; }
     .logo span { color: var(--accent); }
     .badge {
       background: rgba(16, 185, 129, 0.1);
       border: 1px solid #10b981;
       color: #34d399;
-      padding: 6px 16px;
+      padding: 6px 14px;
       border-radius: 100px;
       font-family: 'Space Mono', monospace;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
     }
     .container {
-      max-width: 1200px;
-      margin: 32px auto;
-      padding: 0 24px;
+      max-width: 1140px;
+      margin: 28px auto;
+      padding: 0 20px;
       width: 100%;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 28px;
     }
-    /* MAIN TOP CARD: 100% FULL WIDE CHAT PLAYGROUND */
     .chat-card {
       width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 36px;
+      padding: 28px;
       backdrop-filter: blur(20px);
       box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     }
@@ -104,114 +110,119 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
       gap: 12px;
     }
     .card-title {
       font-family: 'Syne', sans-serif;
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 800;
       color: #fff;
     }
     .endpoint-badge {
       font-family: 'Space Mono', monospace;
-      font-size: 12px;
+      font-size: 11px;
       color: #38bdf8;
       background: rgba(56, 189, 248, 0.1);
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 8px;
       border: 1px solid rgba(56, 189, 248, 0.3);
+      max-width: 100%;
+      word-break: break-all;
     }
-    label { display: block; font-family: 'Space Mono', monospace; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; margin-top: 16px; }
+    label { display: block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; margin-top: 14px; }
     select {
       width: 100%;
       background: rgba(2, 6, 23, 0.95);
       border: 1px solid var(--border);
       color: #fff;
-      padding: 16px 20px;
+      padding: 14px 18px;
       border-radius: 12px;
       font-family: inherit;
-      font-size: 15px;
-      margin-bottom: 20px;
+      font-size: 14px;
+      margin-bottom: 16px;
       outline: none;
     }
     .chat-box {
       width: 100%;
-      height: 420px;
+      height: 380px;
       background: rgba(2, 6, 23, 0.95);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
+      border-radius: 12px;
+      padding: 20px;
       overflow-y: auto;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      line-height: 1.8;
+      font-size: 14px;
+      line-height: 1.7;
       white-space: pre-wrap;
       word-break: break-word;
+      box-sizing: border-box;
     }
-    .msg { margin-bottom: 18px; width: 100%; }
+    .msg { margin-bottom: 16px; width: 100%; }
     .msg.user {
       color: var(--accent);
       font-weight: 700;
       background: rgba(56, 189, 248, 0.08);
-      padding: 14px 20px;
-      border-radius: 12px;
+      padding: 12px 18px;
+      border-radius: 10px;
       border-left: 4px solid var(--accent);
     }
     .msg.bot {
       color: #f1f5f9;
       background: rgba(16, 185, 129, 0.08);
-      padding: 16px 22px;
-      border-radius: 12px;
+      padding: 14px 18px;
+      border-radius: 10px;
       border-left: 4px solid #10b981;
-      font-size: 15px;
     }
     .input-group {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       width: 100%;
+      align-items: center;
+      box-sizing: border-box;
     }
     .input-group input {
-      flex: 1;
+      flex: 1 1 0%;
+      min-width: 0;
       background: rgba(2, 6, 23, 0.95);
       border: 1px solid var(--border);
       color: #fff;
-      padding: 16px 22px;
+      padding: 14px 18px;
       border-radius: 12px;
       font-family: inherit;
-      font-size: 16px;
+      font-size: 15px;
       outline: none;
-    }
-    .input-group input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 20px var(--accent-glow);
+      margin-bottom: 0;
     }
     .btn {
+      flex: 0 0 auto;
       background: linear-gradient(135deg, #0284c7, #38bdf8);
       color: #000;
       font-weight: 800;
-      padding: 16px 36px;
+      padding: 14px 28px;
       border: none;
       border-radius: 12px;
       cursor: pointer;
       font-family: 'Syne', sans-serif;
-      font-size: 16px;
+      font-size: 15px;
       transition: transform 0.2s;
       white-space: nowrap;
     }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
-    /* BOTTOM SECONDARY SECTION: DEPLOYER & CODE */
+    
     .grid-bottom {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
       width: 100%;
+      box-sizing: border-box;
     }
     @media(max-width: 850px) {
       .grid-bottom { grid-template-columns: 1fr; }
       .input-group { flex-direction: column; }
+      .btn { width: 100%; }
     }
     .small-card {
       background: var(--panel);
@@ -219,13 +230,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       border-radius: 16px;
       padding: 24px;
       backdrop-filter: blur(16px);
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      overflow: hidden;
     }
     .small-title {
       font-family: 'Syne', sans-serif;
       font-size: 18px;
       font-weight: 700;
       color: #fff;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .code-block {
       background: #090d16;
@@ -237,6 +252,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       color: #38bdf8;
       overflow-x: auto;
       white-space: pre;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     .log-box {
       background: #000;
@@ -250,6 +267,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       overflow-y: auto;
       margin-top: 12px;
       white-space: pre-wrap;
+      word-break: break-all;
+      box-sizing: border-box;
     }
   </style>
 </head>
@@ -260,7 +279,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   </header>
 
   <div class="container">
-    <!-- TOP SECTION 1: 100% WIDE MAIN CHATBOT PLAYGROUND -->
+    <!-- TOP SECTION: 100% WIDE CHATBOT PLAYGROUND -->
     <div class="chat-card">
       <div class="card-header">
         <h1 class="card-title">🤖 Real AI Chatbot Studio</h1>
@@ -275,7 +294,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       </select>
 
       <div class="chat-box" id="chatBox">
-        <div class="msg bot">⚡ <strong>[CLOUDFLARE WORKERS AI READY]:</strong> Live serverless worker connected. Type any message below:</div>
+        <div class="msg bot">⚡ <strong>[CLOUDFLARE WORKERS AI READY]:</strong> Connected to live edge worker (Meta LLaMA 3.3 70B). Ask any question below:</div>
       </div>
 
       <div class="input-group">
@@ -284,7 +303,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       </div>
     </div>
 
-    <!-- BOTTOM SECTION 2: WRANGLER DEPLOYER & CODE -->
+    <!-- BOTTOM SECTION: WRANGLER DEPLOYER & CODE -->
     <div class="grid-bottom">
       <div class="small-card">
         <h2 class="small-title">🚀 1-Click Wrangler Deployer</h2>
@@ -420,7 +439,7 @@ def open_browser():
 
 if __name__ == '__main__':
     print("========================================================")
-    print("  ZipLoot Cloudflare AI Studio (Full-Width Main Chat)")
+    print("  ZipLoot Cloudflare AI Studio (Flawless Responsive Layout)")
     print("  Server running at: http://localhost:5000")
     print("========================================================")
     Timer(1.5, open_browser).start()
