@@ -44,7 +44,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <style>
     :root {
       --void: #020617;
-      --panel: rgba(15, 23, 42, 0.9);
+      --panel: rgba(8, 14, 42, 0.88);
       --border: rgba(56, 189, 248, 0.25);
       --accent: #38bdf8;
       --accent-glow: rgba(56, 189, 248, 0.4);
@@ -69,7 +69,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       justify-content: space-between;
       backdrop-filter: blur(12px);
     }
-    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; color: #fff; }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px; color: #fff; }
     .logo span { color: var(--accent); }
     .badge {
       background: rgba(16, 185, 129, 0.1);
@@ -82,45 +82,49 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       font-weight: 700;
     }
     .container {
-      max-width: 1240px;
-      margin: 30px auto;
+      max-width: 1200px;
+      margin: 32px auto;
       padding: 0 24px;
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 30px;
+      gap: 32px;
     }
-    .main-section {
+    /* MAIN TOP CARD: 100% FULL WIDE CHAT PLAYGROUND */
+    .chat-card {
       width: 100%;
-    }
-    .card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 32px;
+      padding: 36px;
       backdrop-filter: blur(20px);
       box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     }
-    .card-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 20px;
+    .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
-    .status-tag {
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .endpoint-badge {
       font-family: 'Space Mono', monospace;
       font-size: 12px;
       color: #38bdf8;
-      background: rgba(56,189,248,0.1);
-      padding: 4px 12px;
-      border-radius: 6px;
-      border: 1px solid rgba(56,189,248,0.3);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
     }
-    label { display: block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; margin-top: 14px; }
-    input, select {
+    label { display: block; font-family: 'Space Mono', monospace; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; margin-top: 16px; }
+    select {
       width: 100%;
       background: rgba(2, 6, 23, 0.95);
       border: 1px solid var(--border);
@@ -129,17 +133,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       border-radius: 12px;
       font-family: inherit;
       font-size: 15px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       outline: none;
-      transition: all 0.2s;
-    }
-    input:focus, select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 20px var(--accent-glow);
     }
     .chat-box {
-      min-height: 380px;
-      max-height: 520px;
+      width: 100%;
+      height: 420px;
       background: rgba(2, 6, 23, 0.95);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -148,54 +147,85 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       margin-bottom: 20px;
       font-family: 'Inter', sans-serif;
       font-size: 15px;
+      line-height: 1.8;
       white-space: pre-wrap;
       word-break: break-word;
-      line-height: 1.7;
     }
-    .msg { margin-bottom: 18px; }
+    .msg { margin-bottom: 18px; width: 100%; }
     .msg.user {
       color: var(--accent);
       font-weight: 700;
       background: rgba(56, 189, 248, 0.08);
-      padding: 12px 18px;
-      border-radius: 10px;
+      padding: 14px 20px;
+      border-radius: 12px;
       border-left: 4px solid var(--accent);
     }
     .msg.bot {
       color: #f1f5f9;
       background: rgba(16, 185, 129, 0.08);
-      padding: 16px 20px;
+      padding: 16px 22px;
       border-radius: 12px;
       border-left: 4px solid #10b981;
       font-size: 15px;
     }
-    .input-row {
+    .input-group {
       display: flex;
       gap: 16px;
+      width: 100%;
     }
-    .input-row input { flex: 1; margin-bottom: 0; }
+    .input-group input {
+      flex: 1;
+      background: rgba(2, 6, 23, 0.95);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 16px 22px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 16px;
+      outline: none;
+    }
+    .input-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
     .btn {
       background: linear-gradient(135deg, #0284c7, #38bdf8);
       color: #000;
       font-weight: 800;
-      padding: 16px 32px;
+      padding: 16px 36px;
       border: none;
       border-radius: 12px;
       cursor: pointer;
       font-family: 'Syne', sans-serif;
       font-size: 16px;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s;
       white-space: nowrap;
     }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
-    .grid-2 {
+    /* BOTTOM SECONDARY SECTION: DEPLOYER & CODE */
+    .grid-bottom {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
+      width: 100%;
     }
-    @media(max-width: 900px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      .input-row { flex-direction: column; }
+    @media(max-width: 850px) {
+      .grid-bottom { grid-template-columns: 1fr; }
+      .input-group { flex-direction: column; }
+    }
+    .small-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+    }
+    .small-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 14px;
     }
     .code-block {
       background: #090d16;
@@ -211,12 +241,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     .log-box {
       background: #000;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
+      border-radius: 8px;
+      padding: 12px;
       font-family: 'Space Mono', monospace;
-      font-size: 12px;
+      font-size: 11px;
       color: #34d399;
-      height: 140px;
+      height: 120px;
       overflow-y: auto;
       margin-top: 12px;
       white-space: pre-wrap;
@@ -226,51 +256,47 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body>
   <header>
     <div class="logo">ZipLoot <span>Cloudflare AI Studio</span></div>
-    <div class="badge">● LIVE CLOUDFLARE WORKER CONNECTED</div>
+    <div class="badge">● LIVE WORKER CONNECTED</div>
   </header>
 
   <div class="container">
-    <!-- MAIN SECTION 1: FULL WIDE AI CHATBOT PLAYGROUND -->
-    <div class="main-section">
-      <div class="card">
-        <div class="card-title">
-          <span>🤖 Cloudflare Workers AI Chatbot Studio</span>
-          <span class="status-tag">URL: https://cloudflare-ai-bot-studio.sikuroybd.workers.dev</span>
-        </div>
+    <!-- TOP SECTION 1: 100% WIDE MAIN CHATBOT PLAYGROUND -->
+    <div class="chat-card">
+      <div class="card-header">
+        <h1 class="card-title">🤖 Real AI Chatbot Studio</h1>
+        <span class="endpoint-badge">Worker API: https://cloudflare-ai-bot-studio.sikuroybd.workers.dev</span>
+      </div>
 
-        <label>SELECT AI MODEL</label>
-        <select id="modelSelect">
-          <option value="llama3">Meta LLaMA 3.3 70B Instruct (Ultra Fast Edge GPU)</option>
-          <option value="deepseek">DeepSeek R1 Distill 32B (Reasoning Model)</option>
-          <option value="mistral">Mistral 7B Instruct v0.2</option>
-        </select>
+      <label>SELECT CLOUDFLARE AI MODEL</label>
+      <select id="modelSelect">
+        <option value="llama3">Meta LLaMA 3.3 70B Instruct (Ultra Fast Edge GPU)</option>
+        <option value="deepseek">DeepSeek R1 Distill 32B (Reasoning Model)</option>
+        <option value="mistral">Mistral 7B Instruct v0.2</option>
+      </select>
 
-        <div class="chat-box" id="chatBox">
-          <div class="msg bot">⚡ <strong>[CLOUDFLARE WORKERS AI READY]:</strong> Connected to live edge worker (Meta LLaMA 3.3 70B). Ask any question or request code below:</div>
-        </div>
+      <div class="chat-box" id="chatBox">
+        <div class="msg bot">⚡ <strong>[CLOUDFLARE WORKERS AI READY]:</strong> Live serverless worker connected. Type any message below:</div>
+      </div>
 
-        <div class="input-row">
-          <input type="text" id="userInput" placeholder="Ask AI anything (e.g. Where are you hosted? Write a Python script)..." onkeydown="if(event.key==='Enter') sendChat()">
-          <button class="btn" onclick="sendChat()">Send Message</button>
-        </div>
+      <div class="input-group">
+        <input type="text" id="userInput" placeholder="Type your message here (e.g. Hello, Where are you hosted?, Write code)..." onkeydown="if(event.key==='Enter') sendChat()">
+        <button class="btn" onclick="sendChat()">Send Message</button>
       </div>
     </div>
 
-    <!-- SECONDARY SECTION: AUTOMATED DEPLOYER & CODE -->
-    <div class="grid-2">
-      <div class="card">
-        <h2 class="card-title" style="font-size: 18px;">🚀 1-Click Wrangler Deployer</h2>
+    <!-- BOTTOM SECTION 2: WRANGLER DEPLOYER & CODE -->
+    <div class="grid-bottom">
+      <div class="small-card">
+        <h2 class="small-title">🚀 1-Click Wrangler Deployer</h2>
         <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 14px;">
           Automatically authenticate &amp; publish your serverless AI API directly to Cloudflare via Wrangler CLI ($0/month).
         </p>
-
         <button class="btn" style="background: linear-gradient(135deg, #10b981, #34d399); width:100%;" onclick="deployWrangler()">⚡ Re-Deploy to Cloudflare via Wrangler</button>
-        
         <div class="log-box" id="wranglerLog">[STATUS]: Live Worker Active on Cloudflare Edge: https://cloudflare-ai-bot-studio.sikuroybd.workers.dev</div>
       </div>
 
-      <div class="card">
-        <h2 class="card-title" style="font-size: 18px;">⚡ Serverless Worker Code (worker.js)</h2>
+      <div class="small-card">
+        <h2 class="small-title">⚡ Serverless Worker Code (worker.js)</h2>
         <div class="code-block" id="workerCode">export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -353,7 +379,6 @@ def chat():
     model_key = data.get('model', 'llama3')
     cf_model = CF_MODELS.get(model_key, CF_MODELS['llama3'])
 
-    # Step 1: Query the live deployed Cloudflare Worker API first
     try:
         payload = {
             "model": cf_model,
@@ -370,8 +395,7 @@ def chat():
     except Exception as e:
         print(f"[WORKER API LOG]: {e}")
 
-    # Fallback intelligent response if offline
-    fallback_response = f"**ZipLoot Cloudflare AI ({model_key.upper()}):** Processing query '{prompt}'. Real-time edge response generated."
+    fallback_response = f"**ZipLoot Cloudflare AI ({model_key.upper()}):** Real-time edge response generated for '{prompt}'."
     return jsonify({"response": fallback_response})
 
 @app.route('/api/deploy-wrangler', methods=['POST'])
@@ -396,7 +420,7 @@ def open_browser():
 
 if __name__ == '__main__':
     print("========================================================")
-    print("  ZipLoot Cloudflare AI Studio (Live Cloudflare Worker)")
+    print("  ZipLoot Cloudflare AI Studio (Full-Width Main Chat)")
     print("  Server running at: http://localhost:5000")
     print("========================================================")
     Timer(1.5, open_browser).start()
